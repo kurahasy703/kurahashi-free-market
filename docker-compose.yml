@@ -5,6 +5,8 @@ services:
     image: nginx:1.21.1
     ports:
       - "80:80"
+    environment:
+      TZ: Asia/Tokyo
     volumes:
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./src:/var/www/
@@ -13,12 +15,15 @@ services:
 
   php:
     build: ./docker/php
+    environment:
+      TZ: Asia/Tokyo
     volumes:
       - ./src:/var/www/
 
   mysql:
     image: mysql:8.0.26
     environment:
+      TZ: Asia/Tokyo
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: laravel_db
       MYSQL_USER: laravel_user
@@ -32,11 +37,18 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     environment:
-      - PMA_ARBITRARY=1
-      - PMA_HOST=mysql
-      - PMA_USER=laravel_user
-      - PMA_PASSWORD=laravel_pass
+      TZ: Asia/Tokyo
+      PMA_ARBITRARY: 1
+      PMA_HOST: mysql
+      PMA_USER: laravel_user
+      PMA_PASSWORD: laravel_pass
     depends_on:
       - mysql
     ports:
-      - 8080:80
+      - "8080:80"
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
