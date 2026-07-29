@@ -1,0 +1,102 @@
+## アプリケーション名
+
+KURAHASHI-free-market
+
+## 環境構築
+
+リポジトリからダウンロード
+
+```
+1.git clone git@github.com:kurahasy703/kurahashi-free-market.git
+2.cd coachtech/kurahashi-free-market
+3.DockerDesktopアプリを立ち上げる
+4.docker-compose up -d --build
+```
+
+---
+
+### Laravel環境構築
+
+```
+1.docker-compose exec php bash
+2.composer install
+
+---
+
+### .envファイル作成
+
+```
+cp .env.example .env
+```
+
+.envファイルを以下のように修正
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_pass
+```
+
+---
+
+### アプリケーションキー作成
+
+```
+php artisan key:generate
+```
+
+---
+
+### マイグレーション実行
+
+```
+php artisan migrate
+```
+
+---
+
+### シーディング実行
+
+```
+php artisan db:seed
+```
+
+---
+
+### シンボリックリンク作成
+
+```
+php artisan storage:link
+```
+
+---
+
+### 権限設定
+
+"The stream or file could not be opened" エラーが発生した場合
+
+```
+chmod -R 777 storage bootstrap/cache
+```
+
+## 使用技術(実行環境)
+
+```
+言語/フレームワーク: PHP 8.1, Laravel 8.x
+データベース: MySQL
+インフラ: Docker / Docker Compose
+```
+##　テーブル設計
+
+## URL
+
+- 商品一覧: 
+- 商品登録: 
+- 商品検索: 
+
+## ER図
+
+[ER図](ER.drawio)作成
