@@ -50,10 +50,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::delete('/item/{item}/favorite', [FavoriteController::class, 'destroy'])
         ->name('favorite.destroy');
-    Route::get('/purchase/{item}', [
-        OrderController::class,
-        'create',
-    ])->name('order.create');
 
     Route::post('/purchase/{item}', [
         OrderController::class,
