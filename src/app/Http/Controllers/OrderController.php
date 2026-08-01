@@ -7,6 +7,7 @@ use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Stripe\Checkout\Session;
+use Stripe\Exception\ApiErrorException;
 use Stripe\Stripe;
 
 class OrderController extends Controller
@@ -22,7 +23,7 @@ class OrderController extends Controller
     }
 
     /**
-     * Stripeの決済画面へ移動
+     * 注文情報を保存してStripeの決済画面へ移動
      */
     public function store(Request $request, Item $item)
     {
@@ -49,51 +50,91 @@ class OrderController extends Controller
 
         $user = Auth::user();
 
-        Stripe::setApiKey(config('services.stripe.secret'));
-
-        $session = Session::create([
-            'payment_method_types' => [
-                $request->payment_method,
-            ],
-
-            'mode' => 'payment',
-
-            'customer_email' => $user->email,
-
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'jpy',
-
-                        'product_data' => [
-                            'name' => $item->name,
-                        ],
-
-                        'unit_amount' => $item->price,
-                    ],
-
-                    'quantity' => 1,
-                ],
-            ],
-
-            'metadata' => [
-                'item_id' => (string) $item->id,
-                'user_id' => (string) $user->id,
-                'payment_method' => $request->payment_method,
-            ],
-
-            'success_url' => route(
-                'order.success',
-                ['item' => $item]
-            ) . '?session_id={CHECKOUT_SESSION_ID}',
-
-            'cancel_url' => route(
-                'order.create',
-                ['item' => $item]
-            ),
+        /*
+         * Stripeへ移動する前に、
+         * 配送情報をordersテーブルへ保存
+         */
+        $order = Order::create([
+            'user_id' => $user->id,
+            'item_id' => $item->id,
+            'postal_code' => $user->postal_code,
+            'address' => $user->address,
+            'building_name' => $user->building_name,
+            'payment_method' => $request->payment_method,
+            'stripe_id' => null,
         ]);
 
-        return redirect()->away($session->url);
+        try {
+            Stripe::setApiKey(
+                config('services.stripe.secret')
+            );
+
+            $session = Session::create([
+                'payment_method_types' => [
+                    $request->payment_method,
+                ],
+
+                'mode' => 'payment',
+
+                'customer_email' => $user->email,
+
+                'line_items' => [
+                    [
+                        'price_data' => [
+                            'currency' => 'jpy',
+
+                            'product_data' => [
+                                'name' => $item->name,
+                            ],
+
+                            'unit_amount' => $item->price,
+                        ],
+
+                        'quantity' => 1,
+                    ],
+                ],
+
+                'metadata' => [
+                    'order_id' => (string) $order->id,
+                    'item_id' => (string) $item->id,
+                    'user_id' => (string) $user->id,
+                    'payment_method' =>
+                    $request->payment_method,
+                ],
+
+                'success_url' => route(
+                    'order.success',
+                    ['item' => $item]
+                ) . '?session_id={CHECKOUT_SESSION_ID}',
+
+                'cancel_url' => route(
+                    'order.create',
+                    ['item' => $item]
+                ),
+            ]);
+
+            /*
+             * 作成されたStripeセッションIDを保存
+             */
+            $order->update([
+                'stripe_id' => $session->id,
+            ]);
+
+            return redirect()->away($session->url);
+        } catch (ApiErrorException $e) {
+            /*
+             * Stripe決済画面を作れなかった場合は、
+             * 先に作った注文データを削除
+             */
+            $order->delete();
+
+            return redirect()
+                ->route('order.create', $item)
+                ->with(
+                    'error',
+                    '決済画面を作成できませんでした。'
+                );
+        }
     }
 
     /**
@@ -106,40 +147,58 @@ class OrderController extends Controller
         if (!$sessionId) {
             return redirect()
                 ->route('order.create', $item)
-                ->with('error', '決済情報を確認できませんでした。');
+                ->with(
+                    'error',
+                    '決済情報を確認できませんでした。'
+                );
         }
 
-        Stripe::setApiKey(config('services.stripe.secret'));
+        Stripe::setApiKey(
+            config('services.stripe.secret')
+        );
 
         $session = Session::retrieve($sessionId);
 
-        if ((int) $session->metadata->item_id !== $item->id) {
+        if (
+            (int) $session->metadata->item_id
+            !== $item->id
+        ) {
             abort(403);
         }
 
-        if ((int) $session->metadata->user_id !== Auth::id()) {
+        if (
+            (int) $session->metadata->user_id
+            !== Auth::id()
+        ) {
             abort(403);
         }
 
-        $user = Auth::user();
+        /*
+         * store()で作成済みの注文を確認
+         */
+        $order = Order::where(
+            'id',
+            $session->metadata->order_id
+        )
+            ->where('item_id', $item->id)
+            ->where('user_id', Auth::id())
+            ->firstOrFail();
 
-        Order::firstOrCreate(
-            [
-                'item_id' => $item->id,
-            ],
-            [
-                'user_id' => $user->id,
-                'postal_code' => $user->postal_code,
-                'address' => $user->address,
-                'building_name' => $user->building_name,
-                'payment_method' =>
-                $session->metadata->payment_method,
-                'stripe_id' => $session->id,
-            ]
-        );
+        /*
+         * StripeセッションIDを再確認して保存
+         */
+        $order->update([
+            'stripe_id' => $session->id,
+        ]);
 
         return redirect()
-            ->route('profile.show', ['page' => 'buy'])
-            ->with('success', '購入手続きが完了しました。');
+            ->route(
+                'profile.show',
+                ['page' => 'buy']
+            )
+            ->with(
+                'success',
+                '購入手続きが完了しました。'
+            );
     }
 }

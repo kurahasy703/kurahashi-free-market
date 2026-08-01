@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Item;
+use Illuminate\Database\Seeder;
 
 class ItemSeeder extends Seeder
 {
@@ -26,7 +26,7 @@ class ItemSeeder extends Seeder
 
         $item->categories()->attach([5]);
 
-        Item::create([
+        $item = Item::create([
             'name' => 'HDD',
             'price' => 5000,
             'brand_name' => '西芝',
@@ -35,9 +35,10 @@ class ItemSeeder extends Seeder
             'user_id' => 2,
             'condition_id' => 2,
         ]);
+
         $item->categories()->attach([2]);
 
-        Item::create([
+        $item = Item::create([
             'name' => '玉ねぎ３束',
             'price' => 300,
             'brand_name' => 'なし',
@@ -46,9 +47,10 @@ class ItemSeeder extends Seeder
             'user_id' => 1,
             'condition_id' => 3,
         ]);
-        $item->categories()->attach([]);
 
-        Item::create([
+        $item->categories()->attach([10]);
+
+        $item = Item::create([
             'name' => '革靴',
             'price' => 4000,
             'brand_name' => '',
@@ -57,9 +59,10 @@ class ItemSeeder extends Seeder
             'user_id' => 2,
             'condition_id' => 4,
         ]);
+
         $item->categories()->attach([5]);
 
-        Item::create([
+        $item = Item::create([
             'name' => 'ノートPC',
             'price' => 45000,
             'brand_name' => '',
@@ -68,9 +71,10 @@ class ItemSeeder extends Seeder
             'user_id' => 1,
             'condition_id' => 1,
         ]);
+
         $item->categories()->attach([2]);
 
-        Item::create([
+        $item = Item::create([
             'name' => 'マイク',
             'price' => 8000,
             'brand_name' => 'なし',
@@ -79,9 +83,10 @@ class ItemSeeder extends Seeder
             'user_id' => 1,
             'condition_id' => 2,
         ]);
+
         $item->categories()->attach([2]);
 
-        Item::create([
+        $item = Item::create([
             'name' => 'ショルダーバッグ',
             'price' => 3500,
             'brand_name' => '',
@@ -90,9 +95,10 @@ class ItemSeeder extends Seeder
             'user_id' => 1,
             'condition_id' => 3,
         ]);
+
         $item->categories()->attach([4]);
 
-        Item::create([
+        $item = Item::create([
             'name' => 'タンブラー',
             'price' => 500,
             'brand_name' => 'なし',
@@ -101,9 +107,10 @@ class ItemSeeder extends Seeder
             'user_id' => 1,
             'condition_id' => 4,
         ]);
-        $item->categories()->attach([]);
 
-        Item::create([
+        $item->categories()->attach([9]);
+
+        $item = Item::create([
             'name' => 'コーヒーミル',
             'price' => 4000,
             'brand_name' => 'Starbacks',
@@ -112,9 +119,10 @@ class ItemSeeder extends Seeder
             'user_id' => 1,
             'condition_id' => 1,
         ]);
-        $item->categories()->attach([]);
 
-        Item::create([
+        $item->categories()->attach([9]);
+
+        $item = Item::create([
             'name' => 'メイクセット',
             'price' => 2500,
             'brand_name' => '',
@@ -122,8 +130,8 @@ class ItemSeeder extends Seeder
             'image_url' => 'items/makeup.jpg',
             'user_id' => 1,
             'condition_id' => 2,
-
         ]);
+
         $item->categories()->attach([4]);
     }
 }

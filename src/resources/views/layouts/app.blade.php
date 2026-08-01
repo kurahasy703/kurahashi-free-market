@@ -48,7 +48,7 @@
                     @auth
                     <li>
                         <form
-                            action="/logout"
+                            action="{{ route('logout') }}"
                             method="POST">
                             @csrf
 
