@@ -9,7 +9,68 @@ use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
-    // ほかのメソッドはこの上に残してください
+    /**
+     * マイページ
+     */
+    public function show(Request $request)
+    {
+        $user = Auth::user();
+        $page = $request->query('page', 'sell');
+
+        if ($page === 'buy') {
+            $items = $user->orders()
+                ->with('item.order')
+                ->latest()
+                ->get()
+                ->pluck('item');
+        } else {
+            $items = $user->items()
+                ->with('order')
+                ->latest()
+                ->get();
+        }
+
+        return view(
+            'profile.show',
+            compact('user', 'items', 'page')
+        );
+    }
+
+    /**
+     * プロフィール編集画面
+     */
+    public function edit()
+    {
+        $user = Auth::user();
+
+        return view(
+            'profile.edit',
+            compact('user')
+        );
+    }
+
+    /**
+     * プロフィール更新
+     */
+    public function update(ProfileRequest $request)
+    {
+        $user = Auth::user();
+        $data = $request->validated();
+
+        if ($request->hasFile('profile_image')) {
+            $data['profile_image'] = $request
+                ->file('profile_image')
+                ->store('profiles', 'public');
+        } else {
+            unset($data['profile_image']);
+        }
+
+        $user->update($data);
+
+        return redirect()
+            ->route('profile.show')
+            ->with('message', 'プロフィールを更新しました。');
+    }
 
     /**
      * 配送先変更画面
