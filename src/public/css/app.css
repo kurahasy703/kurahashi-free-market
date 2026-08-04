@@ -1208,6 +1208,7 @@ img {
         height: auto;
         aspect-ratio: 1 / 1;
     }
+
 }
 /* =========================
    商品購入画面
@@ -1487,6 +1488,44 @@ img {
         height: 54px;
         font-size: 18px;
     }
+        .purchase-form__address-link {
+            padding: 0;
+            border: none;
+            background: none;
+            color: #0073cc;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    
+        .purchase-form__address-link:hover {
+            text-decoration: underline;
+        }
+                .exhibition-form__image-upload {
+                    width: 100%;
+                    height: 180px;
+                    border: 1px dashed #5f5f5f;
+        
+                    position: relative;
+                    overflow: hidden;
+        
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+        
+                .exhibition-form__image-preview {
+                    width: 100%;
+                    height: 100%;
+                    -o-object-fit: contain;
+                       object-fit: contain;
+                    /* 画像全体を枠内に収める */
+                }
+        
+                .exhibition-form__image-button {
+                    position: absolute;
+                    z-index: 10;
+                    padding: 10px 20px;
+                }
 }
 /* =========================
    マイページ
@@ -1776,7 +1815,7 @@ img {
     background: #fff5f5;
 }
 
-.profile-edit__image-button input {
+.profile-edit__file-input {
     display: none;
 }
 
@@ -1860,7 +1899,7 @@ img {
    タブレット
 ========================= */
 
-@media screen and (min-width:768px) and (max-width:850px) {
+@media screen and (min-width: 768px) and (max-width: 850px) {
 
     .profile-edit__content {
         width: calc(100% - 60px);
@@ -1897,7 +1936,6 @@ img {
         height: 55px;
         font-size: 20px;
     }
-
 }
 /* =========================
    送付先住所変更画面

@@ -12,7 +12,7 @@
             @if ($user->profile_image)
             <img
                 src="{{ asset('storage/' . $user->profile_image) }}"
-                alt="{{ $user->name }}">
+                alt="">
             @endif
         </div>
 

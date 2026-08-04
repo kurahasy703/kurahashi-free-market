@@ -31,7 +31,7 @@
                         src="{{ $user->profile_image
                             ? asset('storage/' . $user->profile_image)
                             : asset('img/default-user.png') }}"
-                        alt="プロフィール画像">
+                        alt="">
 
                 </div>
 
@@ -42,6 +42,7 @@
                 </label>
 
                 <input
+                    class="profile-edit__file-input"
                     type="file"
                     id="profile_image"
                     name="profile_image"

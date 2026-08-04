@@ -19,6 +19,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'テスト太郎',
                 'password' => Hash::make('password123'),
+                'email_verified_at' => now(),
                 'profile_image' => 'profiles/test_user.jpg',
                 'postal_code' => '123-4567',
                 'address' => '東京都渋谷区道玄坂x-x-x',
@@ -33,6 +34,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'テスト次郎',
                 'password' => Hash::make('password123'),
+                'email_verified_at' => now(),
                 'profile_image' => 'profiles/test_user.jpg',
                 'postal_code' => '123-4567',
                 'address' => '東京都渋谷区道玄坂xx-x-x',

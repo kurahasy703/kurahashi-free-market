@@ -88,7 +88,7 @@
     background: #fff5f5;
 }
 
-.profile-edit__image-button input {
+.profile-edit__file-input {
     display: none;
 }
 
@@ -172,7 +172,7 @@
    タブレット
 ========================= */
 
-@media screen and (min-width:768px) and (max-width:850px) {
+@media screen and (min-width: 768px) and (max-width: 850px) {
 
     .profile-edit__content {
         width: calc(100% - 60px);
@@ -209,5 +209,4 @@
         height: 55px;
         font-size: 20px;
     }
-
 }
