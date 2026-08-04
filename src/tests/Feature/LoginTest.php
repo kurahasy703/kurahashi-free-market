@@ -64,6 +64,8 @@ class LoginTest extends TestCase
             'password' => Hash::make('password123'),
         ]);
 
+        $user->markEmailAsVerified();
+
         $response = $this->post('/login', [
             'email' => 'test@example.com',
             'password' => 'password123',

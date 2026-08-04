@@ -41,7 +41,7 @@ class ExhibitionRequest extends FormRequest
             'categories' => [
                 'required',
                 'array',
-                'min:0',
+                'min:1',
             ],
 
             'categories.*' => [
@@ -74,6 +74,8 @@ class ExhibitionRequest extends FormRequest
     {
         return [
             'name.required' => '商品名を入力してください',
+            'name.max'
+            => '商品名は255文字以内で入力してください',
             'description.required' => '商品説明を入力してください',
             'description.max' => '商品説明は255文字以内で入力してください',
 

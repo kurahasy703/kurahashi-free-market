@@ -3,22 +3,33 @@
 @section('title', '会員登録')
 
 @section('content')
+
 <div class="register-form__content">
+
     <div class="register-form__heading">
         <h2>会員登録</h2>
     </div>
 
-    <form class="form" action="/register" method="post" novalidate>
+    <form
+        class="form"
+        action="{{ route('register') }}"
+        method="POST"
+        novalidate>
+
         @csrf
 
         <div class="form__group">
+
             <div class="form__group-title">
-                <label class="form__label--item" for="name">
+                <label
+                    class="form__label--item"
+                    for="name">
                     ユーザー名
                 </label>
             </div>
 
             <div class="form__group-content">
+
                 <div class="form__input--text">
                     <input
                         id="name"
@@ -32,17 +43,23 @@
                     {{ $message }}
                     @enderror
                 </div>
+
             </div>
+
         </div>
 
         <div class="form__group">
+
             <div class="form__group-title">
-                <label class="form__label--item" for="email">
+                <label
+                    class="form__label--item"
+                    for="email">
                     メールアドレス
                 </label>
             </div>
 
             <div class="form__group-content">
+
                 <div class="form__input--text">
                     <input
                         id="email"
@@ -56,17 +73,23 @@
                     {{ $message }}
                     @enderror
                 </div>
+
             </div>
+
         </div>
 
         <div class="form__group">
+
             <div class="form__group-title">
-                <label class="form__label--item" for="password">
+                <label
+                    class="form__label--item"
+                    for="password">
                     パスワード
                 </label>
             </div>
 
             <div class="form__group-content">
+
                 <div class="form__input--text">
                     <input
                         id="password"
@@ -79,17 +102,23 @@
                     {{ $message }}
                     @enderror
                 </div>
+
             </div>
+
         </div>
 
         <div class="form__group">
+
             <div class="form__group-title">
-                <label class="form__label--item" for="password_confirmation">
+                <label
+                    class="form__label--item"
+                    for="password_confirmation">
                     確認用パスワード
                 </label>
             </div>
 
             <div class="form__group-content">
+
                 <div class="form__input--text">
                     <input
                         id="password_confirmation"
@@ -102,14 +131,19 @@
                     {{ $message }}
                     @enderror
                 </div>
+
             </div>
+
         </div>
 
         <div class="form__button">
-            <button class="form__button-submit" type="submit">
+            <button
+                class="form__button-submit"
+                type="submit">
                 登録する
             </button>
         </div>
+
     </form>
 
     <div class="login__link">
@@ -117,5 +151,7 @@
             ログインはこちら
         </a>
     </div>
+
 </div>
+
 @endsection

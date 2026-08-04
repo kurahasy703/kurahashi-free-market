@@ -41,7 +41,7 @@ class ItemSeeder extends Seeder
         $item = Item::create([
             'name' => '玉ねぎ３束',
             'price' => 300,
-            'brand_name' => 'なし',
+            'brand_name' => null,
             'description' => '新鮮な玉ねぎ３束のセット',
             'image_url' => 'items/onion.jpg',
             'user_id' => 1,
@@ -53,7 +53,7 @@ class ItemSeeder extends Seeder
         $item = Item::create([
             'name' => '革靴',
             'price' => 4000,
-            'brand_name' => '',
+            'brand_name' => null,
             'description' => 'クラシックなデザインの革靴',
             'image_url' => 'items/Shoes.jpg',
             'user_id' => 2,
@@ -65,7 +65,7 @@ class ItemSeeder extends Seeder
         $item = Item::create([
             'name' => 'ノートPC',
             'price' => 45000,
-            'brand_name' => '',
+            'brand_name' => null,
             'description' => '高性能なノートパソコン',
             'image_url' => 'items/PC.jpg',
             'user_id' => 1,
@@ -77,7 +77,7 @@ class ItemSeeder extends Seeder
         $item = Item::create([
             'name' => 'マイク',
             'price' => 8000,
-            'brand_name' => 'なし',
+            'brand_name' => null,
             'description' => '高音質のレコーディング用マイク',
             'image_url' => 'items/Mic.jpg',
             'user_id' => 1,
@@ -89,7 +89,7 @@ class ItemSeeder extends Seeder
         $item = Item::create([
             'name' => 'ショルダーバッグ',
             'price' => 3500,
-            'brand_name' => '',
+            'brand_name' => null,
             'description' => 'おしゃれなショルダーバッグ',
             'image_url' => 'items/bag.jpg',
             'user_id' => 1,
@@ -101,14 +101,14 @@ class ItemSeeder extends Seeder
         $item = Item::create([
             'name' => 'タンブラー',
             'price' => 500,
-            'brand_name' => 'なし',
+            'brand_name' => null,
             'description' => '使いやすいタンブラー',
             'image_url' => 'items/Tumbler.jpg',
             'user_id' => 1,
             'condition_id' => 4,
         ]);
 
-        $item->categories()->attach([9]);
+        $item->categories()->attach([10]);
 
         $item = Item::create([
             'name' => 'コーヒーミル',
@@ -120,18 +120,18 @@ class ItemSeeder extends Seeder
             'condition_id' => 1,
         ]);
 
-        $item->categories()->attach([9]);
+        $item->categories()->attach([10]);
 
         $item = Item::create([
             'name' => 'メイクセット',
             'price' => 2500,
-            'brand_name' => '',
+            'brand_name' => null,
             'description' => '便利なメイクアップセット',
             'image_url' => 'items/makeup.jpg',
             'user_id' => 1,
             'condition_id' => 2,
         ]);
 
-        $item->categories()->attach([4]);
+        $item->categories()->attach([6]);
     }
 }

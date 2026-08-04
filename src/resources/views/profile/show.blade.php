@@ -9,20 +9,20 @@
     <section class="mypage__profile">
 
         <div class="mypage__profile-image">
-            @if(Auth::user()->profile_image)
+            @if ($user->profile_image)
             <img
-                src="{{ asset('storage/' . Auth::user()->profile_image) }}"
-                alt="{{ Auth::user()->name }}">
+                src="{{ asset('storage/' . $user->profile_image) }}"
+                alt="{{ $user->name }}">
             @endif
         </div>
 
         <h1 class="mypage__user-name">
-            {{ Auth::user()->name }}
+            {{ $user->name }}
         </h1>
 
         <a
             class="mypage__profile-link"
-            href="/mypage/profile">
+            href="{{ route('profile.edit') }}">
             プロフィールを編集
         </a>
 
@@ -32,13 +32,13 @@
 
         <a
             class="mypage__tab {{ request('page', 'sell') === 'sell' ? 'active' : '' }}"
-            href="/mypage?page=sell">
+            href="{{ route('profile.show', ['page' => 'sell']) }}">
             出品した商品
         </a>
 
         <a
             class="mypage__tab {{ request('page') === 'buy' ? 'active' : '' }}"
-            href="/mypage?page=buy">
+            href="{{ route('profile.show', ['page' => 'buy']) }}">
             購入した商品
         </a>
 
@@ -46,7 +46,7 @@
 
     <div class="mypage__item-list">
 
-        @forelse($items as $item)
+        @forelse ($items as $item)
 
         <article class="mypage__item">
 
@@ -61,7 +61,7 @@
                         src="{{ asset('storage/' . $item->image_url) }}"
                         alt="{{ $item->name }}">
 
-                    @if($item->order)
+                    @if ($item->order)
                     <span class="mypage__item-sold">
                         Sold
                     </span>

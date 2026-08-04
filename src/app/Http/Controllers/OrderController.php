@@ -45,7 +45,10 @@ class OrderController extends Controller
         if ($item->order()->exists()) {
             return redirect()
                 ->route('item.show', $item)
-                ->with('error', 'この商品はすでに購入されています。');
+                ->with(
+                    'error',
+                    'この商品はすでに購入されています。'
+                );
         }
 
         $user = Auth::user();
@@ -140,6 +143,9 @@ class OrderController extends Controller
     /**
      * Stripe決済後の処理
      */
+    /**
+     * Stripe決済後の処理
+     */
     public function success(Request $request, Item $item)
     {
         $sessionId = $request->query('session_id');
@@ -153,11 +159,20 @@ class OrderController extends Controller
                 );
         }
 
-        Stripe::setApiKey(
-            config('services.stripe.secret')
-        );
+        try {
+            Stripe::setApiKey(
+                config('services.stripe.secret')
+            );
 
-        $session = Session::retrieve($sessionId);
+            $session = Session::retrieve($sessionId);
+        } catch (ApiErrorException $e) {
+            return redirect()
+                ->route('order.create', $item)
+                ->with(
+                    'error',
+                    '決済情報を確認できませんでした。'
+                );
+        }
 
         if (
             (int) $session->metadata->item_id
@@ -174,8 +189,8 @@ class OrderController extends Controller
         }
 
         /*
-         * store()で作成済みの注文を確認
-         */
+     * store()で作成済みの注文情報を確認
+     */
         $order = Order::where(
             'id',
             $session->metadata->order_id
@@ -185,8 +200,8 @@ class OrderController extends Controller
             ->firstOrFail();
 
         /*
-         * StripeセッションIDを再確認して保存
-         */
+     * StripeセッションIDを保存
+     */
         $order->update([
             'stripe_id' => $session->id,
         ]);

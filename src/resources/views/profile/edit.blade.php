@@ -28,23 +28,24 @@
 
                     <img
                         id="preview"
-                        src="{{ $user->profile_image ? asset('storage/' . $user->profile_image) : asset('img/default-user.png') }}"
+                        src="{{ $user->profile_image
+                            ? asset('storage/' . $user->profile_image)
+                            : asset('img/default-user.png') }}"
                         alt="プロフィール画像">
 
                 </div>
 
-                <label class="profile-edit__image-button">
-
+                <label
+                    class="profile-edit__image-button"
+                    for="profile_image">
                     画像を選択する
-
-                    <input
-                        type="file"
-                        id="profile_image"
-                        name="profile_image"
-                        accept="image/png,image/jpeg"
-                        onchange="previewImage(this);">
-
                 </label>
+
+                <input
+                    type="file"
+                    id="profile_image"
+                    name="profile_image"
+                    accept=".jpg,.jpeg,.png">
 
             </div>
 
@@ -136,7 +137,10 @@
                     type="text"
                     id="building_name"
                     name="building_name"
-                    value="{{ old('building_name', $user->building_name) }}">
+                    value="{{ old(
+                        'building_name',
+                        $user->building_name
+                    ) }}">
 
                 <div class="profile-edit__error">
                     @error('building_name')
@@ -159,17 +163,33 @@
 </div>
 
 <script>
-    function previewImage(input) {
-        if (input.files && input.files[0]) {
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageInput =
+            document.getElementById('profile_image');
+
+        const imagePreview =
+            document.getElementById('preview');
+
+        if (!imageInput || !imagePreview) {
+            return;
+        }
+
+        imageInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+
+            if (!file) {
+                return;
+            }
+
             const reader = new FileReader();
 
-            reader.onload = function(e) {
-                document.getElementById('preview').src = e.target.result;
-            };
+            reader.addEventListener('load', function(event) {
+                imagePreview.src = event.target.result;
+            });
 
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
+            reader.readAsDataURL(file);
+        });
+    });
 </script>
 
 @endsection

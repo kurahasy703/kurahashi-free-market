@@ -59,6 +59,9 @@ class Item extends Model
         return $this->hasMany(Favorite::class);
     }
 
+    /**
+     * お気に入り登録したユーザー
+     */
     public function favoriteUsers()
     {
         return $this->belongsToMany(

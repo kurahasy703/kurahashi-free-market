@@ -3,6 +3,7 @@
 @section('title', '商品一覧')
 
 @section('content')
+
 <div class="item-list">
 
     <div class="item-list__tabs">
@@ -25,7 +26,9 @@
     </div>
 
     <div class="item-list__content">
-        @foreach($items as $item)
+
+        @foreach ($items as $item)
+
         <div class="item">
 
             <a
@@ -33,14 +36,18 @@
                 href="{{ route('item.show', $item) }}">
 
                 <div class="item__image-wrapper">
+
                     <img
                         class="item__image"
                         src="{{ asset('storage/' . $item->image_url) }}"
                         alt="{{ $item->name }}">
 
-                    @if($item->order)
-                    <p class="sold">Sold</p>
+                    @if ($item->order)
+                    <p class="sold">
+                        Sold
+                    </p>
                     @endif
+
                 </div>
 
                 <p class="item__name">
@@ -50,8 +57,11 @@
             </a>
 
         </div>
+
         @endforeach
+
     </div>
 
 </div>
+
 @endsection

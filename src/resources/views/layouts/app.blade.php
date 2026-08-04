@@ -14,7 +14,9 @@
     <header class="header">
         <div class="header__inner">
 
-            <a href="/" class="header__logo">
+            <a
+                class="header__logo"
+                href="{{ route('item.index') }}">
                 <img
                     src="{{ asset('img/logo.png') }}"
                     alt="COACHTECH">
@@ -24,10 +26,10 @@
 
             <form
                 class="header__search"
-                action="/"
+                action="{{ route('item.index') }}"
                 method="GET">
 
-                @if(request('tab'))
+                @if (request('tab'))
                 <input
                     type="hidden"
                     name="tab"
@@ -63,7 +65,7 @@
                     <li>
                         <a
                             class="nav__item-link"
-                            href="/login">
+                            href="{{ route('login') }}">
                             ログイン
                         </a>
                     </li>
@@ -72,7 +74,7 @@
                     <li>
                         <a
                             class="nav__item-link"
-                            href="/mypage">
+                            href="{{ route('profile.show') }}">
                             マイページ
                         </a>
                     </li>
@@ -80,7 +82,7 @@
                     <li>
                         <a
                             class="nav__btn-sell"
-                            href="/sell">
+                            href="{{ route('item.create') }}">
                             出品
                         </a>
                     </li>

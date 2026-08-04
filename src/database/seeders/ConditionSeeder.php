@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Condition;
+use Illuminate\Database\Seeder;
 
 class ConditionSeeder extends Seeder
 {
@@ -17,7 +17,7 @@ class ConditionSeeder extends Seeder
         ];
 
         foreach ($conditions as $condition) {
-            Condition::create([
+            Condition::firstOrCreate([
                 'content' => $condition,
             ]);
         }

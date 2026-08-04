@@ -7,9 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class ProfileRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
+     * このリクエストを許可するか
      */
     public function authorize()
     {
@@ -17,33 +15,59 @@ class ProfileRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
+     * バリデーションルール
      */
     public function rules()
     {
         return [
-            'profile_image' => 'nullable|mimes:jpeg,png',
-            'name' => 'required|max:20',
-            'postal_code' => 'required|regex:/^\d{3}-\d{4}$/',
-            'address' => 'required',
-            'building_name' => 'nullable',
+            'profile_image' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'max:20',
+            ],
+            'postal_code' => [
+                'required',
+                'regex:/^\d{3}-\d{4}$/',
+            ],
+            'address' => [
+                'required',
+                'string',
+            ],
+            'building_name' => [
+                'nullable',
+                'string',
+            ],
         ];
     }
 
+    /**
+     * エラーメッセージ
+     */
     public function messages()
     {
         return [
-            'profile_image.mimes' => 'JPEGまたはPNG形式の画像を選択してください。',
+            'profile_image.image' =>
+            '画像ファイルを選択してください。',
+            'profile_image.mimes' =>
+            'JPEGまたはPNG形式の画像を選択してください。',
 
-            'name.required' => 'お名前を入力してください。',
-            'name.max' => 'お名前は20文字以内で入力してください。',
+            'name.required' =>
+            'お名前を入力してください。',
+            'name.max' =>
+            'お名前は20文字以内で入力してください。',
 
-            'postal_code.required' => '郵便番号を入力してください。',
-            'postal_code.regex' => '郵便番号は「123-4567」の形式で入力してください。',
+            'postal_code.required' =>
+            '郵便番号を入力してください。',
+            'postal_code.regex' =>
+            '郵便番号は「123-4567」の形式で入力してください。',
 
-            'address.required' => '住所を入力してください。',
+            'address.required' =>
+            '住所を入力してください。',
         ];
     }
 }

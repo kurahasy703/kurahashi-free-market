@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\FavoriteController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', [ItemController::class, 'index'])
     ->name('item.index');
@@ -14,45 +14,62 @@ Route::get('/item/{item}', [ItemController::class, 'show'])
     ->name('item.show');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-
     Route::get('/sell', [ItemController::class, 'create'])
         ->name('item.create');
 
     Route::post('/sell', [ItemController::class, 'store'])
         ->name('item.store');
 
-    // 配送先変更を先に書く
-    Route::get('/purchase/address/{item}', [ProfileController::class, 'editAddress'])
-        ->name('profile.address.edit');
+    Route::get(
+        '/purchase/address/{item}',
+        [ProfileController::class, 'editAddress']
+    )->name('profile.address.edit');
 
-    Route::post('/purchase/address/{item}', [ProfileController::class, 'updateAddress'])
-        ->name('profile.address.update');
+    Route::post(
+        '/purchase/address/{item}',
+        [ProfileController::class, 'updateAddress']
+    )->name('profile.address.update');
 
-    // 購入画面
-    Route::get('/purchase/{item}', [OrderController::class, 'create'])
-        ->name('order.create');
+    Route::get(
+        '/purchase/{item}',
+        [OrderController::class, 'create']
+    )->name('order.create');
 
-    Route::post('/purchase/{item}', [OrderController::class, 'store'])
-        ->name('order.store');
+    Route::post(
+        '/purchase/{item}',
+        [OrderController::class, 'store']
+    )->name('order.store');
 
-    Route::get('/purchase/{item}/success', [OrderController::class, 'success'])
-        ->name('order.success');
+    Route::get(
+        '/purchase/{item}/success',
+        [OrderController::class, 'success']
+    )->name('order.success');
 
     Route::get('/mypage', [ProfileController::class, 'show'])
         ->name('profile.show');
 
-    Route::get('/mypage/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
+    Route::get(
+        '/mypage/profile',
+        [ProfileController::class, 'edit']
+    )->name('profile.edit');
 
-    Route::patch('/mypage/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
+    Route::patch(
+        '/mypage/profile',
+        [ProfileController::class, 'update']
+    )->name('profile.update');
 
-    Route::post('/item/{item}/comments', [CommentController::class, 'store'])
-        ->name('comment.store');
+    Route::post(
+        '/item/{item}/comments',
+        [CommentController::class, 'store']
+    )->name('comment.store');
 
-    Route::post('/item/{item}/favorite', [FavoriteController::class, 'store'])
-        ->name('favorite.store');
+    Route::post(
+        '/item/{item}/favorite',
+        [FavoriteController::class, 'store']
+    )->name('favorite.store');
 
-    Route::delete('/item/{item}/favorite', [FavoriteController::class, 'destroy'])
-        ->name('favorite.destroy');
+    Route::delete(
+        '/item/{item}/favorite',
+        [FavoriteController::class, 'destroy']
+    )->name('favorite.destroy');
 });

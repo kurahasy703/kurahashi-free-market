@@ -19,11 +19,17 @@ class Order extends Model
         'stripe_id',
     ];
 
+    /**
+     * 購入者
+     */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * 購入商品
+     */
     public function item()
     {
         return $this->belongsTo(Item::class);

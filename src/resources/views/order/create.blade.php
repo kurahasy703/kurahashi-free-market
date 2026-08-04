@@ -52,19 +52,26 @@
                     id="payment_method"
                     name="payment_method">
 
-                    <option value="">
+                    <option
+                        value=""
+                        disabled
+                        {{ old('payment_method') ? '' : 'selected' }}>
                         選択してください
                     </option>
 
                     <option
                         value="konbini"
-                        {{ old('payment_method') === 'konbini' ? 'selected' : '' }}>
+                        {{ old('payment_method') === 'konbini'
+                            ? 'selected'
+                            : '' }}>
                         コンビニ支払い
                     </option>
 
                     <option
                         value="card"
-                        {{ old('payment_method') === 'card' ? 'selected' : '' }}>
+                        {{ old('payment_method') === 'card'
+                            ? 'selected'
+                            : '' }}>
                         カード支払い
                     </option>
 
@@ -88,7 +95,7 @@
 
                     <a
                         class="purchase-form__address-link"
-                        href="{{ route('profile.address.edit', ['item' => $item->id]) }}">
+                        href="{{ route('profile.address.edit', $item) }}">
                         変更する
                     </a>
 
@@ -104,7 +111,7 @@
                         {{ $user->address }}
                     </p>
 
-                    @if($user->building_name)
+                    @if ($user->building_name)
                     <p>
                         {{ $user->building_name }}
                     </p>
@@ -146,7 +153,7 @@
 
             </div>
 
-            @if(session('error'))
+            @if (session('error'))
             <div class="purchase-form__session-error">
                 {{ session('error') }}
             </div>
@@ -170,7 +177,9 @@
             document.getElementById('payment_method');
 
         const paymentDisplay =
-            document.getElementById('selected-payment-method');
+            document.getElementById(
+                'selected-payment-method'
+            );
 
         if (!paymentSelect || !paymentDisplay) {
             return;

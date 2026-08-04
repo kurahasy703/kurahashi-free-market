@@ -69,7 +69,10 @@ class ProfileController extends Controller
 
         return redirect()
             ->route('profile.show')
-            ->with('message', 'プロフィールを更新しました。');
+            ->with(
+                'message',
+                'プロフィールを更新しました。'
+            );
     }
 
     /**
@@ -90,7 +93,7 @@ class ProfileController extends Controller
      */
     public function updateAddress(Request $request, Item $item)
     {
-        $request->validate(
+        $data = $request->validate(
             [
                 'postal_code' => [
                     'required',
@@ -114,14 +117,13 @@ class ProfileController extends Controller
         );
 
         $user = Auth::user();
-
-        $user->postal_code = $request->postal_code;
-        $user->address = $request->address;
-        $user->building_name = $request->building_name;
-        $user->save();
+        $user->update($data);
 
         return redirect()
-            ->route('order.create', ['item' => $item->id])
-            ->with('message', '送付先を更新しました。');
+            ->route('order.create', $item)
+            ->with(
+                'message',
+                '送付先を更新しました。'
+            );
     }
 }

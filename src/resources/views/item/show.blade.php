@@ -13,7 +13,7 @@
                 src="{{ asset('storage/' . $item->image_url) }}"
                 alt="{{ $item->name }}">
 
-            @if($item->order)
+            @if ($item->order)
             <span class="item-detail__sold">
                 Sold
             </span>
@@ -29,7 +29,7 @@
                 {{ $item->name }}
             </h1>
 
-            @if($item->brand_name)
+            @if ($item->brand_name)
             <p class="item-detail__brand">
                 {{ $item->brand_name }}
             </p>
@@ -49,7 +49,11 @@
 
                     @auth
 
-                    @if($item->favorites->where('user_id', auth()->id())->isNotEmpty())
+                    @if (
+                    $item->favorites
+                    ->where('user_id', auth()->id())
+                    ->isNotEmpty()
+                    )
 
                     <form
                         class="item-detail__favorite-form"
@@ -122,11 +126,34 @@
 
             </div>
 
+            @if ($item->order)
+
+            <div
+                class="item-detail__purchase-button
+                    item-detail__purchase-button--disabled">
+                売り切れました
+            </div>
+
+            @elseif (
+            auth()->check()
+            && $item->user_id === auth()->id()
+            )
+
+            <div
+                class="item-detail__purchase-button
+                    item-detail__purchase-button--disabled">
+                自分の商品です
+            </div>
+
+            @else
+
             <a
                 class="item-detail__purchase-button"
                 href="{{ route('order.create', $item) }}">
                 購入手続きへ
             </a>
+
+            @endif
 
         </section>
 
@@ -136,7 +163,9 @@
                 商品説明
             </h2>
 
-            <p class="item-detail__description">{{ $item->description }}</p>
+            <p class="item-detail__description">
+                {!! nl2br(e($item->description)) !!}
+            </p>
 
         </section>
 
@@ -156,7 +185,7 @@
 
                     <div class="item-detail__categories">
 
-                        @foreach($item->categories as $category)
+                        @foreach ($item->categories as $category)
                         <span class="item-detail__category">
                             {{ $category->content }}
                         </span>
@@ -190,7 +219,7 @@
 
             <div class="item-detail__comment-list">
 
-                @forelse($item->comments as $comment)
+                @forelse ($item->comments as $comment)
 
                 <article class="item-detail__comment">
 
@@ -198,9 +227,12 @@
 
                         <div class="item-detail__comment-avatar">
 
-                            @if($comment->user->profile_image)
+                            @if ($comment->user->profile_image)
                             <img
-                                src="{{ asset('storage/' . $comment->user->profile_image) }}"
+                                src="{{ asset(
+                                    'storage/'
+                                    . $comment->user->profile_image
+                                ) }}"
                                 alt="{{ $comment->user->name }}">
                             @endif
 
@@ -213,7 +245,9 @@
                     </div>
 
                     <div class="item-detail__comment-box">
-                        <p class="item-detail__comment-content">{{ $comment->content }}</p>
+                        <p class="item-detail__comment-content">
+                            {{ $comment->content }}
+                        </p>
                     </div>
 
                 </article>
@@ -224,17 +258,14 @@
 
             </div>
 
+            @auth
+
             <form
                 class="item-detail__comment-form"
-                action="{{ auth()->check()
-        ? route('comment.store', $item)
-        : route('login') }}"
-                method="{{ auth()->check() ? 'POST' : 'GET' }}"
+                action="{{ route('comment.store', $item) }}"
+                method="POST"
                 novalidate>
-
-                @auth
                 @csrf
-                @endauth
 
                 <label
                     class="item-detail__comment-label"
@@ -261,6 +292,16 @@
                 </button>
 
             </form>
+
+            @else
+
+            <a
+                class="item-detail__comment-submit"
+                href="{{ route('login') }}">
+                ログインしてコメントする
+            </a>
+
+            @endauth
 
         </section>
 

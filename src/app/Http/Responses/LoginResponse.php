@@ -14,6 +14,9 @@ class LoginResponse implements LoginResponseContract
      */
     public function toResponse($request)
     {
+        if (! $request->user()->hasVerifiedEmail()) {
+            return redirect()->route('verification.notice');
+        }
         return redirect('/?tab=mylist');
     }
 }

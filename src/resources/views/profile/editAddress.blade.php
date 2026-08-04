@@ -30,7 +30,7 @@
                 id="postal_code"
                 type="text"
                 name="postal_code"
-                value="{{ old('postal_code', Auth::user()->postal_code) }}">
+                value="{{ old('postal_code', $user->postal_code) }}">
 
             <div class="address-edit__error">
                 @error('postal_code')
@@ -53,7 +53,7 @@
                 id="address"
                 type="text"
                 name="address"
-                value="{{ old('address', Auth::user()->address) }}">
+                value="{{ old('address', $user->address) }}">
 
             <div class="address-edit__error">
                 @error('address')
@@ -76,7 +76,10 @@
                 id="building_name"
                 type="text"
                 name="building_name"
-                value="{{ old('building_name', Auth::user()->building_name) }}">
+                value="{{ old(
+                    'building_name',
+                    $user->building_name
+                ) }}">
 
             <div class="address-edit__error">
                 @error('building_name')

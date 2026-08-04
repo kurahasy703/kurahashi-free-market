@@ -1,12 +1,12 @@
-## アプリケーション名
+# KURAHASHI-free-market
 
-KURAHASHI-free-market
-
-# フリマアプリ
+## アプリケーション概要
 
 商品を出品・購入できるフリーマーケットアプリです。
 
-会員登録、ログイン、商品検索、マイリスト、コメント、商品出品、プロフィール編集、Stripe決済、メール認証などの機能を実装しています。
+会員登録、ログイン、メール認証、商品検索、マイリスト、コメント投稿、
+商品出品、プロフィール編集、配送先変更、Stripe決済などの機能を
+実装しています。
 
 ## 環境構築
 
@@ -32,7 +32,7 @@ cd kurahashi-free-market
 docker compose up -d --build
 ```
 
-環境によっては、次のコマンドでも実行できます。
+環境によっては、次のコマンドを使用します。
 
 ```bash
 docker-compose up -d --build
@@ -40,7 +40,7 @@ docker-compose up -d --build
 
 ## Laravel環境構築
 
-1. PHPコンテナに入ります。
+1. PHPコンテナへ入ります。
 
 ```bash
 docker compose exec php bash
@@ -52,13 +52,13 @@ docker compose exec php bash
 composer install
 ```
 
-3. `.env` ファイルを作成します。
+3. `.env`ファイルを作成します。
 
 ```bash
 cp .env.example .env
 ```
 
-4. `.env` のデータベース設定を次のように変更します。
+4. `.env`のデータベース設定を次のように変更します。
 
 ```env
 DB_CONNECTION=mysql
@@ -87,7 +87,8 @@ php artisan migrate
 php artisan db:seed
 ```
 
-マイグレーションとシーディングを同時に実行する場合は、次のコマンドを使用します。
+マイグレーションとシーディングを同時に実行する場合は、
+次のコマンドを使用します。
 
 ```bash
 php artisan migrate:fresh --seed
@@ -99,22 +100,27 @@ php artisan migrate:fresh --seed
 php artisan storage:link
 ```
 
-## フロントエンド環境構築
-
-PHPコンテナを終了して、プロジェクトの `src` ディレクトリへ移動します。
+9. PHPコンテナを終了します。
 
 ```bash
 exit
+```
+
+## フロントエンド環境構築
+
+1. Laravelプロジェクトがある`src`ディレクトリへ移動します。
+
+```bash
 cd src
 ```
 
-Node.jsパッケージをインストールします。
+2. Node.jsパッケージをインストールします。
 
 ```bash
 npm install
 ```
 
-CSS・JavaScriptをビルドします。
+3. CSSとJavaScriptをビルドします。
 
 ```bash
 npm run development
@@ -122,16 +128,50 @@ npm run development
 
 ## Stripe設定
 
-Stripe決済を使用する場合は、`.env` にStripeのテスト用APIキーを設定します。
+Stripe決済を使用するため、Stripeでテスト用APIキーを取得し、
+`src/.env`に設定します。
 
 ```env
 STRIPE_KEY=Stripeの公開可能キー
 STRIPE_SECRET=Stripeのシークレットキー
 ```
 
-## メール認証
+Stripeのキーを設定した後、プロジェクトルートへ戻り、
+PHPコンテナへ入ります。
 
-メール認証メールの確認にはMailHogを使用します。
+```bash
+cd ..
+docker compose exec php bash
+```
+
+設定キャッシュを削除します。
+
+```bash
+php artisan config:clear
+```
+
+PHPコンテナを終了します。
+
+```bash
+exit
+```
+
+## メール認証設定
+
+メール認証メールの送受信確認にはMailHogを使用します。
+
+`src/.env`のメール設定を次のように変更します。
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=mailhog
+MAIL_PORT=1025
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=null
+MAIL_FROM_ADDRESS=test@example.com
+MAIL_FROM_NAME="${APP_NAME}"
+```
 
 MailHogは次のURLから確認できます。
 
@@ -141,17 +181,57 @@ http://localhost:8025
 
 ## テスト環境
 
-Feature Testを実行する場合は、`src` ディレクトリに
-`.env.testing` を作成します。
+Feature Testを実行する場合は、テスト用データベースを作成します。
+
+### テスト用データベースの作成
+
+1. プロジェクトルートでMySQLコンテナへ入ります。
+
+```bash
+docker compose exec mysql bash
+```
+
+2. MySQLへログインします。
+
+```bash
+mysql -u root -p
+```
+
+3. テスト用データベースを作成し、
+   Laravelのデータベースユーザーへ権限を付与します。
+
+```sql
+CREATE DATABASE laravel_test;
+GRANT ALL PRIVILEGES ON laravel_test.* TO 'laravel_user'@'%';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+4. MySQLコンテナを終了します。
+
+```bash
+exit
+```
+
+### テスト環境の設定
+
+1. PHPコンテナへ入ります。
+
+```bash
+docker compose exec php bash
+```
+
+2. `.env.testing`を作成します。
 
 ```bash
 cp .env.example .env.testing
 ```
 
-`.env.testing` のデータベース設定例です。
+3. `.env.testing`を次のように変更します。
 
 ```env
 APP_ENV=testing
+APP_KEY=
 
 DB_CONNECTION=mysql
 DB_HOST=mysql
@@ -159,33 +239,55 @@ DB_PORT=3306
 DB_DATABASE=laravel_test
 DB_USERNAME=laravel_user
 DB_PASSWORD=laravel_pass
+
+STRIPE_KEY=pk_test_dummy
+STRIPE_SECRET=sk_test_dummy
 ```
 
-テスト用データベースを作成したうえで、次のコマンドを実行します。
+4. テスト環境用のアプリケーションキーを作成します。
 
 ```bash
-php artisan migrate:fresh --seed --env=testing
+php artisan key:generate --env=testing
+```
+
+5. テスト用データベースのマイグレーションを実行します。
+
+```bash
+php artisan migrate:fresh --env=testing
+```
+
+6. すべてのテストを実行します。
+
+```bash
 php artisan test
 ```
 
-`.env.testing` に設定したアプリケーションキーやStripe APIキーなどの
-秘密情報は、GitHubへコミットしないでください。
+`.env`と`.env.testing`に設定したアプリケーションキーや
+Stripe APIキーなどの秘密情報は、GitHubへコミットしないでください。
 
 ## エラーが発生した場合
 
-次のエラーが発生した場合、
+次のようなエラーが発生した場合、
 
 ```text
 The stream or file could not be opened
 ```
 
-ストレージとキャッシュディレクトリの権限を変更します。
+PHPコンテナ内で、ストレージとキャッシュディレクトリの
+権限を変更します。
 
 ```bash
 chmod -R 777 storage bootstrap/cache
 ```
 
-## 使用技術（実行環境）
+設定やルートのキャッシュが原因と考えられる場合は、
+次のコマンドを実行します。
+
+```bash
+php artisan optimize:clear
+```
+
+## 使用技術
 
 - PHP 8.1
 - Laravel 8.83
@@ -198,18 +300,17 @@ chmod -R 777 storage bootstrap/cache
 - Stripe
 - MailHog
 
-
 ## ER図
 
-![ER図](ER.drawio.png)作成
+![ER図](ER.drawio.png)
 
 ## URL
 
-- 商品一覧画面：http://localhost/
-- 会員登録画面：http://localhost/register
-- ログイン画面：http://localhost/login
-- 商品出品画面：http://localhost/sell
-- マイページ：http://localhost/mypage
-- 商品検索：http://localhost/?keyword=検索キーワード
-- phpMyAdmin：http://localhost:8080
-- MailHog：http://localhost:8025
+- 商品一覧画面: http://localhost/
+- 会員登録画面: http://localhost/register
+- ログイン画面: http://localhost/login
+- 商品出品画面: http://localhost/sell
+- マイページ: http://localhost/mypage
+- 商品検索: http://localhost/?keyword=検索キーワード
+- phpMyAdmin: http://localhost:8080
+- MailHog: http://localhost:8025
