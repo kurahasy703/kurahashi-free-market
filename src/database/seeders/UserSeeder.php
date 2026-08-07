@@ -11,15 +11,14 @@ class UserSeeder extends Seeder
     public function run()
     {
         User::updateOrCreate(
-            // 既存ユーザーを探す条件
             [
                 'email' => 'test@example.com',
             ],
-            // 登録・更新する内容
+
             [
                 'name' => 'テスト太郎',
                 'password' => Hash::make('password123'),
-                'profile_image' => 'profiles/test_user.jpg',
+                'profile_image' => 'profiles/test_user1.png',
                 'postal_code' => '123-4567',
                 'address' => '東京都渋谷区道玄坂x-x-x',
                 'building_name' => 'コーチテックビル',
@@ -33,7 +32,7 @@ class UserSeeder extends Seeder
             [
                 'name' => 'テスト次郎',
                 'password' => Hash::make('password123'),
-                'profile_image' => 'profiles/test_user.jpg',
+                'profile_image' => 'profiles/test_user2.png',
                 'postal_code' => '123-4567',
                 'address' => '東京都渋谷区道玄坂xx-x-x',
                 'building_name' => 'コーチテックビル',
