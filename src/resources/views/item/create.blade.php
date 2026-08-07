@@ -236,11 +236,11 @@
 
 
         {{-- 出品ボタン --}}
-        <button
-            class="exhibition-form__submit"
-            type="submit">
-            出品する
-        </button>
+        <div class="exhibition-form__button">
+            <button type="submit">
+                出品する
+            </button>
+        </div>
 
     </form>
 </div>
@@ -248,6 +248,9 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        const form =
+            document.querySelector('.exhibition-form');
+
         const imageInput =
             document.getElementById('image_url');
 
@@ -258,6 +261,18 @@
             document.querySelector(
                 '.exhibition-form__image-button'
             );
+
+        // Enterキーによるフォーム送信を防止
+        if (form) {
+            form.addEventListener('keydown', function(event) {
+                if (
+                    event.key === 'Enter' &&
+                    event.target.tagName !== 'TEXTAREA'
+                ) {
+                    event.preventDefault();
+                }
+            });
+        }
 
         if (!imageInput || !imagePreview) {
             return;
