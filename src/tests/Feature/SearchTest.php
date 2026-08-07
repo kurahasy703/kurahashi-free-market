@@ -56,7 +56,6 @@ class SearchTest extends TestCase
 
         $response->assertSee('腕時計');
 
-        // 検索ボックスにキーワードが保持されている
         $response->assertSee('value="時計"', false);
     }
 }

@@ -18,12 +18,10 @@ class OrderTest extends TestCase
     {
         parent::setUp();
 
-        // テスト中はメール認証ミドルウェアを無効にする
         $this->withoutMiddleware(
             EnsureEmailIsVerified::class
         );
 
-        // Stripeの実通信を行わないための仮キー
         config([
             'services.stripe.secret' => 'sk_test_dummy',
         ]);

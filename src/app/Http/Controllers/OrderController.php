@@ -22,8 +22,6 @@ class OrderController extends Controller
     {
         $user = Auth::user();
 
-        // 配送先を変更していればセッションの住所、
-        // 変更していなければプロフィール住所を使用
         $shippingAddress = session(
             'shipping_address',
             [
@@ -70,8 +68,6 @@ class OrderController extends Controller
 
         $user = Auth::user();
 
-        // 配送先変更がある場合はセッションを使用
-        // なければプロフィール住所を使用
         $shippingAddress = session(
             'shipping_address',
             [
@@ -226,7 +222,6 @@ class OrderController extends Controller
             'stripe_id' => $session->id,
         ]);
 
-        // 購入完了後は一時的な配送先を削除
         session()->forget('shipping_address');
 
         return redirect()

@@ -71,7 +71,6 @@ class ItemDetailTest extends TestCase
 
         $response->assertStatus(200);
 
-        // 商品情報
         $response->assertSee('腕時計');
         $response->assertSee('テストブランド');
         $response->assertSee('15,000');
@@ -79,13 +78,10 @@ class ItemDetailTest extends TestCase
         $response->assertSee('ファッション');
         $response->assertSee('良好');
 
-        // 商品画像
         $response->assertSee('items/test-watch.jpg');
 
-        // いいね数
         $response->assertSee('2');
 
-        // コメント情報
         $response->assertSee('コメントユーザー');
         $response->assertSee('こちらの商品はまだ購入できますか？');
     }

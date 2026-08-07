@@ -39,31 +39,26 @@ class ProfileUpdateTest extends TestCase
 
         $response->assertStatus(200);
 
-        // プロフィール画像
         $response->assertSee(
             'storage/profiles/test-user.png',
             false
         );
 
-        // ユーザー名
         $response->assertSee(
             'value="テストユーザー"',
             false
         );
 
-        // 郵便番号
         $response->assertSee(
             'value="123-4567"',
             false
         );
 
-        // 住所
         $response->assertSee(
             'value="東京都渋谷区1-2-3"',
             false
         );
 
-        // 建物名
         $response->assertSee(
             'value="テストビル101"',
             false

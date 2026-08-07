@@ -21,7 +21,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/sell', [ItemController::class, 'store'])
         ->name('item.store');
 
-    // 配送先変更を先に書く
     Route::get('/purchase/address/{item}', [ProfileController::class, 'editAddress'])
         ->name('profile.address.edit');
 

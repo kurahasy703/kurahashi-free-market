@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Item; // [1] 商品モデルをインポート
+use App\Models\Item;
 use App\Models\Category;
 use App\Models\Condition;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +11,6 @@ use App\Http\Requests\ExhibitionRequest;
 
 class ItemController extends Controller
 {
-    // 商品一覧画面（PG01 / PG02） [2]
     public function index(Request $request)
     {
         $tab = $request->query('tab');

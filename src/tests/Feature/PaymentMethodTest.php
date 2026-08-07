@@ -85,19 +85,16 @@ class PaymentMethodTest extends TestCase
 
         $response->assertStatus(200);
 
-        // プルダウンのID
         $response->assertSee(
             'id="payment_method"',
             false
         );
 
-        // 小計欄の反映先
         $response->assertSee(
             'id="selected-payment-method"',
             false
         );
 
-        // JavaScriptの表示内容
         $response->assertSee(
             "konbini: 'コンビニ支払い'",
             false
@@ -108,7 +105,6 @@ class PaymentMethodTest extends TestCase
             false
         );
 
-        // 選択変更時の処理
         $response->assertSee(
             "paymentSelect.addEventListener",
             false
