@@ -164,7 +164,7 @@ MailHogは次のURLから確認できます。
 
 ## テスト環境
 
-Feature Testを実行する場合は、テスト用データベースを作成します。
+Feature Testを実行するため、テスト用データベースを作成します。
 
 MySQLコンテナへ入ります。
 
@@ -210,6 +210,7 @@ cp .env.example .env.testing
 ```env
 APP_ENV=testing
 APP_KEY=
+APP_KEY は後述の php artisan key:generate --env=testing で生成します。
 
 DB_CONNECTION=mysql
 DB_HOST=mysql
