@@ -99,30 +99,6 @@ php artisan migrate:fresh --seed
 php artisan storage:link
 ```
 
-## フロントエンド環境構築
-
-PHPコンテナを終了します。
-
-```bash
-exit
-```
-
-Laravelプロジェクトがある `src` ディレクトリへ移動します。
-
-```bash
-cd src
-```
-
-Node.jsパッケージをインストールします。
-
-```bash
-npm install
-```
-
-CSSとJavaScriptをビルドします。
-
-```bash
-npm run development
 ```
 
 ## Stripe設定
