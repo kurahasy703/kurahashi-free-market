@@ -29,7 +29,7 @@
                     <img
                         id="preview"
                         src="{{ $user->profile_image ? asset('storage/' . $user->profile_image) : asset('img/default-user.png') }}"
-                        alt="プロフィール画像">
+                        alt="">
 
                 </div>
 

@@ -15,11 +15,38 @@ class OrderController extends Controller
     /**
      * 購入画面
      */
-    public function create(Item $item)
+    public function create(Request $request, Item $item)
     {
         $user = Auth::user();
 
-        return view('order.create', compact('item', 'user'));
+        // 住所変更画面から戻ってきた場合
+        if ($request->query('address_updated')) {
+
+            $shippingAddress = session(
+                'shipping_address',
+                [
+                    'postal_code' => $user->postal_code,
+                    'address' => $user->address,
+                    'building_name' => $user->building_name,
+                ]
+            );
+        } else {
+
+            // 通常の商品詳細画面などから購入画面を開いた場合は
+            // 前回の一時的な配送先を削除
+            session()->forget('shipping_address');
+
+            $shippingAddress = [
+                'postal_code' => $user->postal_code,
+                'address' => $user->address,
+                'building_name' => $user->building_name,
+            ];
+        }
+
+        return view(
+            'order.create',
+            compact('item', 'user', 'shippingAddress')
+        );
     }
 
     /**
@@ -45,22 +72,40 @@ class OrderController extends Controller
         if ($item->order()->exists()) {
             return redirect()
                 ->route('item.show', $item)
-                ->with('error', 'この商品はすでに購入されています。');
+                ->with(
+                    'error',
+                    'この商品はすでに購入されています。'
+                );
         }
 
         $user = Auth::user();
 
-        /*
+        // 配送先変更がある場合はセッションを使用
+        // なければプロフィール住所を使用
+        $shippingAddress = session(
+            'shipping_address',
+            [
+                'postal_code' => $user->postal_code,
+                'address' => $user->address,
+                'building_name' => $user->building_name,
+            ]
+        );
+
+        /**
          * Stripeへ移動する前に、
          * 配送情報をordersテーブルへ保存
          */
         $order = Order::create([
             'user_id' => $user->id,
             'item_id' => $item->id,
-            'postal_code' => $user->postal_code,
-            'address' => $user->address,
-            'building_name' => $user->building_name,
-            'payment_method' => $request->payment_method,
+            'postal_code' =>
+            $shippingAddress['postal_code'],
+            'address' =>
+            $shippingAddress['address'],
+            'building_name' =>
+            $shippingAddress['building_name'] ?? null,
+            'payment_method' =>
+            $request->payment_method,
             'stripe_id' => null,
         ]);
 
@@ -113,7 +158,7 @@ class OrderController extends Controller
                 ),
             ]);
 
-            /*
+            /**
              * 作成されたStripeセッションIDを保存
              */
             $order->update([
@@ -122,7 +167,7 @@ class OrderController extends Controller
 
             return redirect()->away($session->url);
         } catch (ApiErrorException $e) {
-            /*
+            /**
              * Stripe決済画面を作れなかった場合は、
              * 先に作った注文データを削除
              */
@@ -173,7 +218,7 @@ class OrderController extends Controller
             abort(403);
         }
 
-        /*
+        /**
          * store()で作成済みの注文を確認
          */
         $order = Order::where(
@@ -184,12 +229,15 @@ class OrderController extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
-        /*
+        /**
          * StripeセッションIDを再確認して保存
          */
         $order->update([
             'stripe_id' => $session->id,
         ]);
+
+        // 購入完了後は一時的な配送先を削除
+        session()->forget('shipping_address');
 
         return redirect()
             ->route(

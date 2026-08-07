@@ -113,15 +113,20 @@ class ProfileController extends Controller
             ]
         );
 
-        $user = Auth::user();
 
-        $user->postal_code = $request->postal_code;
-        $user->address = $request->address;
-        $user->building_name = $request->building_name;
-        $user->save();
+        session([
+            'shipping_address' => [
+                'postal_code' => $request->postal_code,
+                'address' => $request->address,
+                'building_name' => $request->building_name,
+            ],
+        ]);
 
         return redirect()
-            ->route('order.create', ['item' => $item->id])
+            ->route('order.create', [
+                'item' => $item->id,
+                'address_updated' => 1,
+            ])
             ->with('message', '送付先を更新しました。');
     }
 }

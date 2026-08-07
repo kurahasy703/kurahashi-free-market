@@ -97,16 +97,16 @@
                 <div class="purchase-form__address-text">
 
                     <p>
-                        〒{{ $user->postal_code }}
+                        〒{{ $shippingAddress['postal_code'] }}
                     </p>
 
                     <p>
-                        {{ $user->address }}
+                        {{ $shippingAddress['address'] }}
                     </p>
 
-                    @if($user->building_name)
+                    @if(!empty($shippingAddress['building_name']))
                     <p>
-                        {{ $user->building_name }}
+                        {{ $shippingAddress['building_name'] }}
                     </p>
                     @endif
 
