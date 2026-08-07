@@ -21,17 +21,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/sell', [ItemController::class, 'store'])
         ->name('item.store');
 
+    // 配送先変更を先に書く
+    Route::get('/purchase/address/{item}', [ProfileController::class, 'editAddress'])
+        ->name('profile.address.edit');
+
+    Route::post('/purchase/address/{item}', [ProfileController::class, 'updateAddress'])
+        ->name('profile.address.update');
+
+    // 購入画面
     Route::get('/purchase/{item}', [OrderController::class, 'create'])
         ->name('order.create');
 
     Route::post('/purchase/{item}', [OrderController::class, 'store'])
         ->name('order.store');
 
-    Route::get('/purchase/address/{item}', [ProfileController::class, 'editAddress'])
-        ->name('profile.address.edit');
-
-    Route::post('/purchase/address/{item}', [ProfileController::class, 'updateAddress'])
-        ->name('profile.address.update');
+    Route::get('/purchase/{item}/success', [OrderController::class, 'success'])
+        ->name('order.success');
 
     Route::get('/mypage', [ProfileController::class, 'show'])
         ->name('profile.show');
@@ -50,14 +55,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::delete('/item/{item}/favorite', [FavoriteController::class, 'destroy'])
         ->name('favorite.destroy');
-
-    Route::post('/purchase/{item}', [
-        OrderController::class,
-        'store',
-    ])->name('order.store');
-
-    Route::get('/purchase/{item}/success', [
-        OrderController::class,
-        'success',
-    ])->name('order.success');
 });

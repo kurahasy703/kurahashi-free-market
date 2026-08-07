@@ -88,7 +88,7 @@
 
                     <a
                         class="purchase-form__address-link"
-                        href="{{ route('profile.address.edit', $item) }}">
+                        href="{{ route('profile.address.edit', ['item' => $item->id]) }}">
                         変更する
                     </a>
 
