@@ -15,33 +15,23 @@ class OrderController extends Controller
     /**
      * 購入画面
      */
-    public function create(Request $request, Item $item)
+    /**
+     * 購入画面
+     */
+    public function create(Item $item)
     {
         $user = Auth::user();
 
-        // 住所変更画面から戻ってきた場合
-        if ($request->query('address_updated')) {
-
-            $shippingAddress = session(
-                'shipping_address',
-                [
-                    'postal_code' => $user->postal_code,
-                    'address' => $user->address,
-                    'building_name' => $user->building_name,
-                ]
-            );
-        } else {
-
-            // 通常の商品詳細画面などから購入画面を開いた場合は
-            // 前回の一時的な配送先を削除
-            session()->forget('shipping_address');
-
-            $shippingAddress = [
+        // 配送先を変更していればセッションの住所、
+        // 変更していなければプロフィール住所を使用
+        $shippingAddress = session(
+            'shipping_address',
+            [
                 'postal_code' => $user->postal_code,
                 'address' => $user->address,
                 'building_name' => $user->building_name,
-            ];
-        }
+            ]
+        );
 
         return view(
             'order.create',

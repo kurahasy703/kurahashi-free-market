@@ -41,7 +41,6 @@ class AddressTest extends TestCase
         $this->actingAs($buyer)->post(
             route('profile.address.update', $item),
             [
-                'name' => $buyer->name,
                 'postal_code' => '123-4567',
                 'address' => '東京都渋谷区1-2-3',
                 'building_name' => 'テストビル101',
@@ -60,9 +59,9 @@ class AddressTest extends TestCase
     }
 
     /**
-     * 変更した住所がユーザー情報へ保存される
+     * 配送先を変更してもプロフィール住所は変更されない
      */
-    public function test_updated_address_is_saved()
+    public function test_profile_address_is_not_updated()
     {
         $seller = User::factory()->create();
 
@@ -79,7 +78,6 @@ class AddressTest extends TestCase
         $this->actingAs($buyer)->post(
             route('profile.address.update', $item),
             [
-                'name' => $buyer->name,
                 'postal_code' => '987-6543',
                 'address' => '大阪府大阪市1-2-3',
                 'building_name' => 'サンプルマンション',
@@ -87,6 +85,13 @@ class AddressTest extends TestCase
         );
 
         $this->assertDatabaseHas('users', [
+            'id' => $buyer->id,
+            'postal_code' => '111-1111',
+            'address' => '東京都新宿区',
+            'building_name' => '旧ビル',
+        ]);
+
+        $this->assertDatabaseMissing('users', [
             'id' => $buyer->id,
             'postal_code' => '987-6543',
             'address' => '大阪府大阪市1-2-3',

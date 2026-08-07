@@ -113,7 +113,6 @@ class ProfileController extends Controller
             ]
         );
 
-
         session([
             'shipping_address' => [
                 'postal_code' => $request->postal_code,
@@ -123,10 +122,8 @@ class ProfileController extends Controller
         ]);
 
         return redirect()
-            ->route('order.create', [
-                'item' => $item->id,
-                'address_updated' => 1,
-            ])
+            ->route('order.create', ['item' => $item->id])
+            ->with('address_updated', true)
             ->with('message', '送付先を更新しました。');
     }
 }
