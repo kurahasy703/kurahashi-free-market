@@ -10,47 +10,60 @@
         <h1>商品の出品</h1>
     </div>
 
-    <div class="exhibition-form__group">
-        <label class="exhibition-form__label" for="image_url">
-            商品画像
-        </label>
+    <form
+        class="exhibition-form"
+        action="{{ route('item.store') }}"
+        method="POST"
+        enctype="multipart/form-data"
+        novalidate>
 
-        <div class="exhibition-form__image-upload">
+        @csrf
 
-            <img
-                id="image-preview"
-                class="exhibition-form__image-preview"
-                src=""
-                alt="選択した商品画像"
-                style="display: none;">
-
+        {{-- 商品画像 --}}
+        <div class="exhibition-form__group">
             <label
-                class="exhibition-form__image-button"
+                class="exhibition-form__label"
                 for="image_url">
-                画像を選択する
+                商品画像
             </label>
 
-            <input
-                class="exhibition-form__file-input"
-                id="image_url"
-                type="file"
-                name="image_url"
-                accept=".jpg,.jpeg,.png">
+            <div class="exhibition-form__image-upload">
+
+                <img
+                    id="image-preview"
+                    class="exhibition-form__image-preview"
+                    src=""
+                    alt="選択した商品画像"
+                    style="display: none;">
+
+                <label
+                    class="exhibition-form__image-button"
+                    for="image_url">
+                    画像を選択する
+                </label>
+
+                <input
+                    class="exhibition-form__file-input"
+                    id="image_url"
+                    type="file"
+                    name="image_url"
+                    accept=".jpg,.jpeg,.png">
+            </div>
+
+            <div class="exhibition-form__error">
+                @error('image_url')
+                {{ $message }}
+                @enderror
+            </div>
         </div>
 
-        <div class="exhibition-form__error">
-            @error('image_url')
-            {{ $message }}
-            @enderror
-        </div>
-    </div>
 
-    <section class="exhibition-form__section">
-
+        {{-- 商品の詳細 --}}
         <h2 class="exhibition-form__section-title">
             商品の詳細
         </h2>
 
+        {{-- カテゴリー --}}
         <div class="exhibition-form__group">
             <p class="exhibition-form__label">
                 カテゴリー
@@ -63,7 +76,10 @@
                         type="checkbox"
                         name="categories[]"
                         value="{{ $category->id }}"
-                        {{ in_array($category->id, old('categories', [])) ? 'checked' : '' }}>
+                        {{ in_array(
+                                $category->id,
+                                old('categories', [])
+                            ) ? 'checked' : '' }}>
 
                     <span>
                         {{ $category->content }}
@@ -79,6 +95,8 @@
             </div>
         </div>
 
+
+        {{-- 商品の状態 --}}
         <div class="exhibition-form__group">
             <label
                 class="exhibition-form__label"
@@ -102,11 +120,12 @@
                 @foreach($conditions as $condition)
                 <option
                     value="{{ $condition->id }}"
-                    {{ old('condition_id') == $condition->id ? 'selected' : '' }}>
+                    {{ old('condition_id') == $condition->id
+                            ? 'selected'
+                            : '' }}>
                     {{ $condition->content }}
                 </option>
                 @endforeach
-
             </select>
 
             <div class="exhibition-form__error">
@@ -116,14 +135,13 @@
             </div>
         </div>
 
-    </section>
 
-    <section class="exhibition-form__section">
-
+        {{-- 商品名と説明 --}}
         <h2 class="exhibition-form__section-title">
             商品名と説明
         </h2>
 
+        {{-- 商品名 --}}
         <div class="exhibition-form__group">
             <label
                 class="exhibition-form__label"
@@ -145,6 +163,8 @@
             </div>
         </div>
 
+
+        {{-- ブランド名 --}}
         <div class="exhibition-form__group">
             <label
                 class="exhibition-form__label"
@@ -166,6 +186,8 @@
             </div>
         </div>
 
+
+        {{-- 商品説明 --}}
         <div class="exhibition-form__group">
             <label
                 class="exhibition-form__label"
@@ -186,41 +208,44 @@
             </div>
         </div>
 
-    </section>
 
-    <div class="exhibition-form__group">
-        <label
-            class="exhibition-form__label"
-            for="price">
-            販売価格
-        </label>
+        {{-- 販売価格 --}}
+        <div class="exhibition-form__group">
+            <label
+                class="exhibition-form__label"
+                for="price">
+                販売価格
+            </label>
 
-        <div class="exhibition-form__price">
-            <span>¥</span>
+            <div class="exhibition-form__price">
+                <span>¥</span>
 
-            <input
-                id="price"
-                type="number"
-                name="price"
-                value="{{ old('price') }}">
+                <input
+                    id="price"
+                    type="number"
+                    name="price"
+                    value="{{ old('price') }}">
+            </div>
+
+            <div class="exhibition-form__error">
+                @error('price')
+                {{ $message }}
+                @enderror
+            </div>
         </div>
 
-        <div class="exhibition-form__error">
-            @error('price')
-            {{ $message }}
-            @enderror
-        </div>
-    </div>
 
-    <div class="exhibition-form__button">
-        <button type="submit">
+        {{-- 出品ボタン --}}
+        <button
+            class="exhibition-form__submit"
+            type="submit">
             出品する
         </button>
-    </div>
 
     </form>
-
 </div>
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const imageInput =
@@ -229,12 +254,26 @@
         const imagePreview =
             document.getElementById('image-preview');
 
+        const imageButton =
+            document.querySelector(
+                '.exhibition-form__image-button'
+            );
+
+        if (!imageInput || !imagePreview) {
+            return;
+        }
+
         imageInput.addEventListener('change', function(event) {
             const file = event.target.files[0];
 
             if (!file) {
                 imagePreview.src = '';
                 imagePreview.style.display = 'none';
+
+                if (imageButton) {
+                    imageButton.style.display = '';
+                }
+
                 return;
             }
 
@@ -243,11 +282,15 @@
             reader.addEventListener('load', function(event) {
                 imagePreview.src = event.target.result;
                 imagePreview.style.display = 'block';
-                document.querySelector('.exhibition-form__image-button').style.display = 'none';
+
+                if (imageButton) {
+                    imageButton.style.display = 'none';
+                }
             });
 
             reader.readAsDataURL(file);
         });
     });
 </script>
+
 @endsection
