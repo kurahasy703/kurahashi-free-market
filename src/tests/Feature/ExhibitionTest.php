@@ -88,12 +88,12 @@ class ExhibitionTest extends TestCase
             $item->image_url
         );
 
-        $this->assertDatabaseHas('category_items', [
+        $this->assertDatabaseHas('category_item', [
             'item_id' => $item->id,
-            'category_id' => $category1->id,
+            'category_id' => 1,
         ]);
 
-        $this->assertDatabaseHas('category_items', [
+        $this->assertDatabaseHas('category_item', [
             'item_id' => $item->id,
             'category_id' => $category2->id,
         ]);

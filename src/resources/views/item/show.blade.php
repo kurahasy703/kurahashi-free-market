@@ -94,13 +94,18 @@
 
                     @else
 
-                    <img
-                        class="item-detail__favorite-icon"
-                        src="{{ asset('img/heart-default.png') }}"
-                        alt="お気に入り">
+                    <a
+                        class="item-detail__favorite-button"
+                        href="{{ route('login') }}"
+                        aria-label="ログインしてお気に入りに追加">
+
+                        <img
+                            src="{{ asset('img/heart-default.png') }}"
+                            alt="お気に入り">
+
+                    </a>
 
                     @endauth
-
                     <span class="item-detail__action-count">
                         {{ $item->favorites->count() }}
                     </span>
@@ -226,9 +231,7 @@
 
             <form
                 class="item-detail__comment-form"
-                action="{{ auth()->check()
-        ? route('comment.store', $item)
-        : route('login') }}"
+                action="{{ auth()->check() ? route('comment.store', $item) : route('login') }}"
                 method="{{ auth()->check() ? 'POST' : 'GET' }}"
                 novalidate>
 
